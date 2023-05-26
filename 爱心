@@ -1,0 +1,84 @@
+import javax.swing.*;
+
+import java.awt.*;
+
+// 满天星动
+public class Test extends JFrame { // 窗体
+    public Test() throws HeadlessException {
+        this.setTitle("爱心"); // 标题
+        this.setVisible(true); // 显示
+        this.setSize(400, 450); // 大小
+        this.setResizable(false); // 禁止缩放
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // 点X退出
+        this.setLocationRelativeTo(null); // 居中
+        Background background = new Background(); // 背景面板
+        this.add(background); // 添加背景面板
+        background.move(); // 调用面板中的移动方法
+    }
+
+    public static void main(String[] args) {
+        Test starrySky = new Test(); //启动入口
+    }
+}
+
+class Background extends JPanel { // 背景面板类
+    int x[] = new int[] {
+        70, 100, 130, 250, 280, 310, 40, 70, 100, 130, 160, 220, 250, 280, 310, 340, 10, 40, 70, 100, 130, 160, 190,
+        220, 250, 280, 310, 340, 370, 10, 40, 70, 100, 130, 160, 190, 220, 250, 280, 310, 340, 370, 10, 40, 70, 100,
+        130, 160, 190, 220, 250, 280, 310, 340, 370, 10, 40, 70, 100, 130, 160, 190, 220, 250, 280, 310, 340, 370, 40,
+        70, 100, 130, 160, 190, 220, 250, 280, 310, 340, 70, 100, 130, 160, 190, 220, 250, 280, 310, 100, 130, 160, 190,
+        220, 250, 280, 130, 160, 190, 220, 250, 160, 190, 220, 190
+    }; // 横坐标数组
+
+    int y[] = new int[] {
+        50, 50, 50, 50, 50, 50, 80, 80, 80, 80, 80, 80, 80, 80, 80, 80, 110, 110, 110, 110, 110, 110, 110, 110, 110,
+        110, 110, 110, 110, 140, 140, 140, 140, 140, 140, 140, 140, 140, 140, 140, 140, 140, 170, 170, 170, 170, 170,
+        170, 170, 170, 170, 170, 170, 170, 170, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 230,
+        230, 230, 230, 230, 230, 230, 230, 230, 230, 230, 260, 260, 260, 260, 260, 260, 260, 260, 260, 290, 290, 290,
+        290, 290, 290, 290, 320, 320, 320, 320, 320, 350, 350, 350, 380
+    }; // 纵坐标数组
+
+    int count = 0;
+
+    float angle = 0;
+
+    public Background() { // 构造函数
+        this.setBackground(Color.black); // 设置背景颜色
+    }
+
+    public void paint(Graphics graphics) { // 作画方法，Graphics为画笔
+        super.paint(graphics); // 把父类中的paint方法拿过来
+        for (int i = 0; i < x.length; i++) { // 绘画
+            graphics.setColor(getColor(angle)); // 设置颜色
+            graphics.setFont(new Font("", Font.PLAIN, 20)); // 字体
+            if (count % 2 == 0) {
+                graphics.drawString("\u2764", x[i], y[i]); // 内容
+            }
+
+        }
+    }
+
+    private Color getColor(float angle) {
+        int r = (int) (Math.sin(angle * Math.PI * 128) * 127 + 128);
+        int g = (int) (Math.sin(angle * Math.PI * 64) * 127 + 128);
+        int b = (int) (Math.sin(angle * Math.PI * 32) * 127 + 128);
+        return new Color(r, g, b);
+    }
+
+    public void move() { // 移动方法
+        new Thread() { // 匿名线程
+            public void run() { // 在线程中相当于main函数，里面的代码可以被执行
+                while (true) { // 死循环
+                    try {
+                        Thread.sleep(100); // 线程睡眠
+                    } catch (InterruptedException e) {
+                        //什么也不做
+                    }
+                    count++;
+                    angle += 0.1;
+                    repaint(); // 重新作画
+                }
+            }
+        }.start(); // 启动线程
+    }
+}
